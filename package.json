@@ -1,0 +1,13 @@
+{
+  "name": "analisisPLN",
+  "version": "0.0.1",
+  "description": "analizador de textos",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.6.1",
+    "express": "*"
+  },
+  "scripts": {
+    "start": "node server.js"
+  }
+}
