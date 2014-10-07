@@ -14,7 +14,7 @@ exports.getEntities = function(text, callback) {
 	exec(command, function cb2(error, stdout, stderr) { 
 		if(error) {
 	 		console.log(error);
-	 		callback(0, error);
+	 		callback(error);
 		} else {
 			var lines = stdout.split('\n')
 			for(l in lines){
@@ -67,7 +67,7 @@ exports.getEntities = function(text, callback) {
 			json.cloud=JSON.parse(json_aux)
 			console.log(json)
 
-			callback(1, json);
+			callback(null,json);
 	    }
 	})   
 }

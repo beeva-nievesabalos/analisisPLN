@@ -34,8 +34,8 @@
   hr
 
   .row
-    .well.well-md.col-md-12
-      label.col-md-12 Results
+    .well.well-md.col-md-12.col-sm-12
+      label.col-md-12.col-sm-12 Results
       .form-group.col-md-6.col-sm-6#cloud
         .row
           .input-group
@@ -44,18 +44,18 @@
 
       .form-group.col-md-6.col-sm-6#entities
         .row
-          div.col-md-12#personas(ng-show="persons")
+          div.col-md-12.col-sm-12#personas(ng-show="persons")
             h3 Personas
             label(ng-repeat="persona in persons") {{persona}}
-          div.col-md-12#localizaciones(ng-show="geographicalLocation")
+          div.col-md-12.col-sm-12#localizaciones(ng-show="geographicalLocation")
             h3 Localizaciones
             label(ng-repeat="localizacion in geographicalLocation") {{localizacion}}
-          div.col-md-12#organizaciones(ng-show="organization")
+          div.col-md-12.col-sm-12#organizaciones(ng-show="organization")
             h3 Organizaciones
             label(ng-repeat="organizacion in organization") {{organizacion}}
-          div.col-md-12#otras-entidades(ng-show="othersEntities")
+          div.col-md-12.col-sm-12#otras-entidades(ng-show="othersEntities")
             h3 Otras Entidades
             label(ng-repeat="otra_entidad in othersEntities") {{otra_entidad}}
-          div.col-md-12#conceptos(ng-show="concepts")
+          div.col-md-12.col-sm-12#conceptos(ng-show="concepts")
             h3 Conceptos
             label(ng-repeat="concepto in concepts") {{concepto}}

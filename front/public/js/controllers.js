@@ -48,21 +48,24 @@ angular.module('myApp.controllers', []).
       var data = '', url = '';
       if ($scope.inputText){
         data = {text : $scope.inputText};
-        url = 'http://localhost:3000/extraerSemantica';
+        url = 'http://localhost:8080/api/extraerSemantica';
       }else if ($scope.pdfFile){
         data = {pdf : $scope.pdfFile};
-        url = 'http://localhost:3000/extraerTexto';
+        url = 'http://localhost:8080/api/extraerTexto';
       }else {
         $scope.error = true;
       }
-
+      
+      $scope.words = $scope.formatWordsArray('');
+      $scope.setListEntities('');
       console.log(data);
 
       if (data != ''){
         $http({
           method: 'POST',
           url: url,
-          data: data
+          data: data,
+          headers: {'Access-Control-Allow-Headers': 'Content-Type, Content-Length, X-Requested-With'}
         })
         .success(function(data, status, headers, config) {
           $scope.error = false;

@@ -12,14 +12,14 @@ exports.extraerPDF = function(pdf, callback){
 	// Extrae la informacion a partir del nombre del ficheo
 	tika.extract(filename, function(err, text, meta) {
 		if(err){
-			callback(0, err);
+			callback(err);
 		}
 		else {
 			console.log("**********************************************")
 			console.log("[TIKA] File:" + filename);
 	   		console.log(text.trim());
 	    	console.log(meta.producer);
-	    	callback(1, {filename:filename, texto: text.trim(), metadata: meta});
+	    	callback(null, {filename:filename, texto: text.trim(), metadata: meta});
 		}
 
 	});
