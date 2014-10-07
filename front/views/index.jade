@@ -1,0 +1,16 @@
+extends layout
+
+block body
+  div(ng-controller='AppCtrl')
+    .page-header.col-md-offset-1.col-md-10
+        h1
+          | Analisis PLN
+
+    div(ng-view)
+
+  script(src='js/lib/angular/angular.js')
+  script(src='js/app.js')
+  script(src='js/services.js')
+  script(src='js/controllers.js')
+  script(src='js/filters.js')
+  script(src='js/directives.js')

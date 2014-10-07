@@ -1,0 +1,61 @@
+.container(ng-controller='DemoCtrl')
+  .row
+    ng-form(role='form')
+      .col-lg-6
+        .well.well-sm
+          .form-group
+            label(for='pdfFile') Search for a pdf document
+            .input-group
+              input#InputPdf.form-control(ng-model="inputFile", type='file', fileread='pdfFile', name="pdfFile", placeholder="Select a PDF file...")
+              span.input-group-addon
+                span.glyphicon.glyphicon-eye-open(ng-click="verDocumento()")
+              span.input-group-addon
+                span.glyphicon.glyphicon-asterisk(ng_click="clearPdf()")
+
+      .col-lg-6
+        .well.well-sm
+          .form-group
+            label(for='InputMessage') Or insert here your text
+            .input-group
+              textarea#InputText.form-control(ng-model="inputText", name='InputText', rows='5')
+              span.input-group-addon
+                span.glyphicon.glyphicon-asterisk(ng_click="clearText()")
+
+      input#submit.btn.btn-info.col-md-offset-5.col-sm-offset-5(name='submit', value='Procces', ng-click="sendData()")
+
+      .col-md-12.messages
+        .alert.alert-success(ng-show="success")
+          strong
+            span.glyphicon.glyphicon-ok  Success!
+        .alert.alert-danger(ng-show="error")
+          strong
+            span.glyphicon.glyphicon-remove  Error!
+
+  hr
+
+  .row
+    .well.well-md.col-md-12
+      label.col-md-12 Results
+      .form-group.col-md-6.col-sm-6#cloud
+        .row
+          .input-group
+            word-cloud(words='words', ng-click='clickMe1', type='cloud', sort='{{ sort1 }}')
+              button(type='button', ng-click='clickFn(word.word)') {{ word.word }}
+
+      .form-group.col-md-6.col-sm-6#entities
+        .row
+          div.col-md-12#personas(ng-show="persons")
+            h3 Personas
+            label(ng-repeat="persona in persons") {{persona}}
+          div.col-md-12#localizaciones(ng-show="geographicalLocation")
+            h3 Localizaciones
+            label(ng-repeat="localizacion in geographicalLocation") {{localizacion}}
+          div.col-md-12#organizaciones(ng-show="organization")
+            h3 Organizaciones
+            label(ng-repeat="organizacion in organization") {{organizacion}}
+          div.col-md-12#otras-entidades(ng-show="othersEntities")
+            h3 Otras Entidades
+            label(ng-repeat="otra_entidad in othersEntities") {{otra_entidad}}
+          div.col-md-12#conceptos(ng-show="concepts")
+            h3 Conceptos
+            label(ng-repeat="concepto in concepts") {{concepto}}
