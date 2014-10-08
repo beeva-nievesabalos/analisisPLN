@@ -48,7 +48,7 @@ app.post('/api/extraerSemantica', function(request, response){
 	console.log("[server.js] post /extraerSemantica/")
 	var texto = request.body.text;
 	// es un texto y llamamos a extraer entidades + nube
-	var textoFormateado = texto.replace(/\n/g, "");
+	var textoFormateado = texto.replace(/\n/g, " ");
 
 	pln.getEntities(textoFormateado, function(err, resultado){
 		if(err){
@@ -77,7 +77,7 @@ app.post('/api/extraerTexto', function(request, response){
 		else {
 			// 'information' tiene: {filename:filename, texto: text.trim(), metadata: meta}
 			// 1. eliminar los saltos de linea!!!
-			var texto = information.texto.replace(/\n/g, "");
+			var texto = information.texto.replace(/\n/g, " ");
 
 			// 2. aqui se llama a getEntities
 			pln.getEntities(texto, function(err, resultado){
