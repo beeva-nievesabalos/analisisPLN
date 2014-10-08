@@ -1,9 +1,9 @@
 var exec = require('child_process').exec;
 
-var sentence="BOLETÍN OFICIAL DEL ESTADO Núm. 240 Viernes 3 de octubre de 2014 Sec. I.   Pág. 78813"
-+ "I. DISPOSICIONES GENERALES MINISTERIO DE ASUNTOS EXTERIORES Y DE COOPERACIÓN 10019 Corrección de errores de la aplicación provisional del Acuerdo entre el Gobierno del Reino de España y el Gobierno de Australia relativo al programa de movilidad para jóvenes, hecho en Canberra el 3 de septiembre de 2014.Advertido error en la publicación de la aplicación provisional del Acuerdo entre el Gobierno del Reino de España y el Gobierno de Australia relativo al programa de movilidad para jóvenes, hecho en Canberra el 3 de septiembre de 2014, publicada en el «Boletín Oficial del Estado» número 228, de fecha 19 de septiembre de 2014, se procede a efectuar la oportuna rectificación:En la pág. 73352, en la primera línea del preámbulo, donde dice: «y Gobierno del Australia», debe decir: «y el Gobierno de Australia». En la pág. 73353, en la cláusula 6, línea 4, donde dice: «del cupo fijo», debe decir: «del cupo fijado». En la pág. 73356, en la antefirma, donde dice: «POR ESPAÑA», debe decir: «POR EL REINO DE ESPAÑA».";
+var sentence="BOLETÍN OFICIAL DEL ESTADO Núm. 240 Viernes 3 de octubre de 2014 Sec. I.   Pág. 78813 I. DISPOSICIONES GENERALES MINISTERIO DE ASUNTOS EXTERIORES Y DE COOPERACIÓN 10019 Corrección de errores de la aplicación provisional del Acuerdo entre el Gobierno del Reino de España y el Gobierno de Australia relativo al programa de movilidad para jóvenes, hecho en Canberra el 3 de septiembre de 2014.Advertido error en la publicación de la aplicación provisional del Acuerdo entre el Gobierno del Reino de España y el Gobierno de Australia relativo al programa de movilidad para jóvenes, hecho en Canberra el 3 de septiembre de 2014, publicada en el «Boletín Oficial del Estado» número 228, de fecha 19 de septiembre de 2014, se procede a efectuar la oportuna rectificación:En la pág. 73352, en la primera línea del preámbulo, donde dice: «y Gobierno del Australia», debe decir: «y el Gobierno de Australia». En la pág. 73353, en la cláusula 6, línea 4, donde dice: «del cupo fijo», debe decir: «del cupo fijado». En la pág. 73356, en la antefirma, donde dice: «POR ESPAÑA», debe decir: «POR EL REINO DE ESPAÑA».";
 
-exports.getEntities = function(text, callback) {
+
+exports.getEntities=function (text, callback) {
 	 //Etiquetas:Person (tag NP00SP0), Geographicallocation (NP00G00), Organization (NP00O00), and Others (NP00V00).
 	command = 'echo "'+ text +'" | analyzer_client 50005'
 
@@ -60,13 +60,49 @@ exports.getEntities = function(text, callback) {
 					if(w!=0){
 						json_aux = json_aux+ ","
 					}
-					json_aux=  json_aux + '"'+ words[w] + '":' + counts[w]
+					json_aux=  json_aux + '"'+ words[w].replace(/_/g, " ") + '":' + counts[w]
 				}
 				json_aux= json_aux + '}'
 			}
 			json.cloud=JSON.parse(json_aux)
-			console.log(json)
 
+			//Quitar guión bajo
+			organization=[]
+			for (c in json.organization){
+				organization[organization.length]=json.organization[c].replace(/_/g, " ")
+			}
+			json.organization=organization
+			
+			//Quitar guión bajo
+			othersEntities=[]
+			for (c in json.othersEntities){
+				othersEntities[othersEntities.length]=json.othersEntities[c].replace(/_/g, " ")
+			}
+			json.othersEntities=othersEntities
+
+			//Quitar guión bajo
+			concepts=[]
+			for (c in json.concepts){
+				concepts[concepts.length]=json.concepts[c].replace(/_/g, " ")
+			}
+			json.concepts=concepts
+
+			//Quitar guión bajo
+			geographicalLocation=[]
+			for (c in json.geographicalLocation){
+				geographicalLocation[geographicalLocation.length]=json.geographicalLocation[c].replace(/_/g, " ")
+			}
+			json.geographicalLocation=geographicalLocation
+
+			//Quitar guión bajo
+			person=[]
+			for (c in json.person){
+				person[person.length]=json.person[c].replace(/_/g, " ")
+			}
+			json.person=person
+
+
+			console.log(json)
 			callback(null,json);
 	    }
 	})   
