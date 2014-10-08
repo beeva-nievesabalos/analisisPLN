@@ -5,6 +5,14 @@ var sentence="BOLETÍN OFICIAL DEL ESTADO Núm. 240 Viernes 3 de octubre de 2014
 
 exports.getEntities = function(text, callback) {
 	console.log("[getEntities] Entrada a procesar:\n" + text);
+	
+	/* Extraer cosas del dominio especificas */
+	//var re = /^(Artículo|ARTÍCULO)(.*)$/;
+	/*var rePattern = new RegExp(/(Artículo|ARTÍCULO)\s[\d*]$/);
+	var matches = text.match(rePattern);
+	console.log("RegEx");
+	console.log(matches);*/
+
 	 //Etiquetas:Person (tag NP00SP0), Geographicallocation (NP00G00), Organization (NP00O00), and Others (NP00V00).
 	command = 'echo "'+ text +'" | analyzer_client 50005'
 
@@ -22,33 +30,51 @@ exports.getEntities = function(text, callback) {
 			 	//console.log(lines[l])	
 			 	var res = lines[l].split(" ");
 			 	if(res[2]!=undefined && res[2].search("N")>=0){
-			 		var aux =[]
-			 		switch(res[2]) {
-					    case "NP00SP0":
-					       	aux=json.person
-							aux=addEntity(aux,res[1])
-					       	json.person=aux
-					        break;
-					    case "NP00G00":
-					        aux=json.geographicalLocation
-							aux=addEntity(aux,res[1])
-					       	json.geographicalLocation=aux
-					        break;
-					     case "NP00O00":
-					       	aux=json.organization
-							aux=addEntity(aux,res[1])
-					       	json.organization=aux
-					        break;
-					    case "NP00V00":
-							aux=json.othersEntities
-							aux=addEntity(aux,res[1])
-					       	json.othersEntities=aux
-					        break;
-					    default:
-					    	aux=json.concepts
-							aux=addEntity(aux,res[1])
-					       	json.concepts=aux
-					        break;
+			 		if(res[2].indexOf("NP") != -1){
+			 			console.log("+ ENTIDADES: "+res[1])
+			 			var aux =[]
+				 		switch(res[2]) {
+						    case "NP00SP0":
+						       	aux=json.person
+								aux=addEntity(aux,res[0]) // que no quite las mayusculas
+						       	json.person=aux
+						        break;
+						    case "NP00G00":
+						        aux=json.geographicalLocation
+								aux=addEntity(aux,res[0])  // que no quite las mayusculas
+						       	json.geographicalLocation=aux
+						        break;
+						    case "NP00O00":
+						       	aux=json.organization
+								aux=addEntity(aux,res[0])  // que no quite las mayusculas
+						       	json.organization=aux
+						        break;
+						    case "NP00V00":
+								aux=json.othersEntities
+								aux=addEntity(aux,res[0])  // que no quite las mayusculas
+						       	json.othersEntities=aux
+						        break;
+						    default:
+						    	/*aux=json.concepts
+								aux=addEntity(aux,res[1])
+						       	json.concepts=aux
+						       	console.log("Añado a conceptos: "+res[1])*/
+						        break;
+						}
+			 		}
+			 		else {
+			 			if(res[2].indexOf("NC")!= -1){
+				 			if(res[1].length > 1){
+					 			var aux =[]
+						 		aux=json.concepts
+								aux=addEntity(aux,res[1]) // el original esta en la pos 0, y en la 1 lo pone en 'singular'
+								json.concepts=aux
+								console.log("+ CONCEPTOS: "+res[1])
+							}
+							else {
+								console.log("No he añadido a conceptos: "+res[1])
+							}
+						}
 					}
 			 	}
 			}
