@@ -11,6 +11,7 @@ var express = require('express'),
   routes = require('./routes'),
   api = require('./routes/api'),
   http = require('http'),
+  fs = require('fs'),
   path = require('path'),
   tika = require('../tika/tika.js'),
   pln = require('../entities.js');
@@ -62,31 +63,36 @@ app.post('/api/extraerSemantica', function(request, response){
 app.post('/api/extraerTexto', function(request, response){
 	console.log("[server.js] POST /extraerTexto/");  
 	// llama a Apache Tika
-	var pdf = request.pdf;
+  var data;
+  request.on('data', function (chunk) {
+      data += chunk;
+  });
 
-	tika.extraerPDF(pdf, function(err, information){
-		if(err){
-			console.log("[server.js] error en extraerPDF"); 
-			response.send(500);
-		}
-		else {
-			// 'information' tiene: {filename:filename, texto: text.trim(), metadata: meta}
-			// 1. eliminar los saltos de linea!!!
-			var texto = information.texto.replace(/\n/g, "");
+  request.on('end', function(){
+    tika.extraerPDF(data, function(err, information){
+      if(err){
+        console.log("[server.js] error en extraerPDF"); 
+        response.send(500);
+      }
+      else {
+        // 'information' tiene: {filename:filename, texto: text.trim(), metadata: meta}
+        // 1. eliminar los saltos de linea!!!
+        var texto = information.texto.replace(/\n/g, "");
 
-			// 2. aqui se llama a getEntities
-			pln.getEntities(texto, function(err, resultado){
-				if(err){
-					console.log("[server.js] error en getEntities:" + resultado); 
-					response.send(500);
-				}
-				else {
-					// la info interesante esta en 'resultado' 
-					response.send(200, resultado);
-				}
-			});
-		}
-	}); 
+        // 2. aqui se llama a getEntities
+        pln.getEntities(texto, function(err, resultado){
+          if(err){
+            console.log("[server.js] error en getEntities:" + resultado); 
+            response.send(500);
+          }
+          else {
+            // la info interesante esta en 'resultado' 
+            response.send(200, resultado);
+          }
+        });
+      }
+    }); 
+  })
 });
 
 // redirect all others to the index (HTML5 history)
