@@ -7,7 +7,7 @@ exports.extraerPDF = function(pdf, callback){
 	// Descargar el fichero?
 
 	// quitar esto!!!!!
-	var filename = folderPDF+'BOE-A-2014-10019.pdf';
+	var filename = pdf;//folderPDF+'BOE-A-2014-10019.pdf';
 
 	// Extrae la informacion a partir del nombre del ficheo
 	tika.extract(filename, function(err, text, meta) {

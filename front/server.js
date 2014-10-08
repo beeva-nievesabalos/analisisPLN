@@ -11,6 +11,8 @@ var express = require('express'),
   routes = require('./routes'),
   api = require('./routes/api'),
   http = require('http'),
+  formidable = require('formidable'),
+  fs = require('fs'),
   path = require('path'),
   tika = require('../tika/tika.js'),
   pln = require('../entities.js');
@@ -67,31 +69,63 @@ app.post('/api/extraerSemantica', function(request, response){
 app.post('/api/extraerTexto', function(request, response){
 	console.log("[server.js] POST /extraerTexto/");  
 	// llama a Apache Tika
-	var pdf = request.pdf;
+  var data;
+  request.on('data', function (chunk) {
+      data += chunk;
+  });
 
-	tika.extraerPDF(pdf, function(err, information){
-		if(err){
-			console.log("[server.js] error en extraerPDF"); 
-			response.send(500);
-		}
-		else {
-			// 'information' tiene: {filename:filename, texto: text.trim(), metadata: meta}
-			// 1. eliminar los saltos de linea!!!
-			var texto = information.texto.replace(/\n/g, " ");
+  request.on('end', function(){
+    console.log("Al acbar");
+    console.log(request.body);
 
-			// 2. aqui se llama a getEntities
-			pln.getEntities(texto, function(err, resultado){
-				if(err){
-					console.log("[server.js] error en getEntities:" + resultado); 
-					response.send(500);
-				}
-				else {
-					// la info interesante esta en 'resultado' 
-					response.send(200, resultado);
-				}
-			});
-		}
-	}); 
+    var form = new formidable.IncomingForm();
+
+    form.parse(request, function(err, fields, files) {
+      /*res.writeHead(200, {'content-type': 'text/plain'});
+      res.write('received upload:\n\n');
+      res.end(util.inspect({fields: fields, files: files}));*/
+
+      console.log(files[0]);
+      console.log(fields);
+
+
+      var hoy = Date.now();
+      var filename= "PDF_"+hoy+".pdf";
+
+      fs.writeFile(filename, files[0], {encoding: 'binary'}, function(err){
+        if (!err){
+          tika.extraerPDF(filename, function(err, information){
+            if(err){
+              console.log("[server.js] error en extraerPDF");
+              response.send(500);
+            }
+            else {
+              // 'information' tiene: {filename:filename, texto: text.trim(), metadata: meta}
+              // 1. eliminar los saltos de linea!!!
+              var texto = information.texto.replace(/\n/g, "");
+
+              // 2. aqui se llama a getEntities
+              pln.getEntities(texto, function(err, resultado){
+                if(err){
+                  console.log("[server.js] error en getEntities:" + resultado);
+                  response.send(500);
+                }
+                else {
+                  // la info interesante esta en 'resultado' 
+                  response.send(200, resultado);
+                }
+              });
+            }
+          });
+        }else{
+          console.log("[server.js] error en writeFile");
+          response.send(500);
+        }
+      });
+    });
+
+    
+  });
 });
 
 // redirect all others to the index (HTML5 history)
