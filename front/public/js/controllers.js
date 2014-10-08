@@ -56,11 +56,12 @@ angular.module('myApp.controllers', []).
         $scope.error = true;
       }
       
-      $scope.words = $scope.formatWordsArray('');
-      $scope.setListEntities('');
-      console.log(data);
+      /*$scope.words = $scope.formatWordsArray('');
+      $scope.setListEntities('');*/
+      console.log("[sendData] url:" + url);
+      console.log("[sendData] Datos:" + JSON.stringify(data));
 
-      if (data != ''){
+      if(data != ''){
         $http({
           method: 'POST',
           url: url,
@@ -70,7 +71,7 @@ angular.module('myApp.controllers', []).
         .success(function(data, status, headers, config) {
           $scope.error = false;
           $scope.success = true;
-          console.log('ok  '+JSON.stringify(data));
+          console.log('[sendData] ok  '+JSON.stringify(data));
           if (data.cloud)
             $scope.words = $scope.formatWordsArray(data.cloud);
           $scope.setListEntities(data);
@@ -78,7 +79,7 @@ angular.module('myApp.controllers', []).
         .error(function(data, status, headers, config) {
           $scope.success = false;
           $scope.error = true;
-          console.log('error  '+JSON.stringify(data));
+          console.log('[sendData] error  '+JSON.stringify(data));
         });
       }
     }
@@ -87,7 +88,7 @@ angular.module('myApp.controllers', []).
       console.log('formatWordsArray');
       var simulatedData = {person:[],geographicalLocation:['canberra'],organization:['gobierno_de_el_reino_de_españa','gobierno_de_australia','gobierno_de_el_australia'],othersEntities:['boletín_oficial_de_el_estado_núm.','sec._i._pág.','disposiciones_generales_ministerio_de_asuntos_exteriores_y_de_cooperación','corrección','acuerdo','boletín_oficial_de_el_estado','por_españa','por_el_reino_de_españa'],concepts:['error','aplicación','programa','movilidad','joven','publicación','número','fecha','se','efectuar','rectificación','pág.','línea','preámbulo','decir','cláusula','cupo','antefirma'],cloud:{'boletín_oficial_de_el_estado_núm.':1,'sec._i._pág.':1,'disposiciones_generales_ministerio_de_asuntos_exteriores_y_de_cooperación':1,'corrección':1,error:2,'aplicación':2,acuerdo:2,'gobierno_de_el_reino_de_españa':2,gobierno_de_australia:3,programa:2,movilidad:2,joven:2,canberra:2,'publicación':1,'boletín_oficial_de_el_estado':1,'número':1,fecha:1,se:1,efectuar:1,'rectificación':1,'pág.':3,'línea':2,'preámbulo':1,gobierno_de_el_australia:1,decir:3,'cláusula':1,cupo:2,antefirma:1,'por_españa':1,'por_el_reino_de_españa':1}};
       var words = [];
-      angular.forEach(simulatedData.cloud/*data*/, function(value, key){
+      angular.forEach(data.cloud/*data*/, function(value, key){
         words.push({word: key, size:((value*5)+10)+'px'});
       });
       $timeout(function () {
@@ -106,28 +107,28 @@ angular.module('myApp.controllers', []).
         othersEntities = [],
         concepts = [];
 
-      if (simulatedData.person/*data.person*/){
-        angular.forEach(simulatedData.person/*data.person*/, function(value, key){
+      if (/*simulatedData.person*/data.person){
+        angular.forEach(data.person/*data.person*/, function(value, key){
           persons.push(value);
         });
       }
-      if (simulatedData.geographicalLocation/*data.geographicalLocation*/){
-        angular.forEach(simulatedData.geographicalLocation/*data.geographicalLocation*/, function(value, key){
+      if (data.geographicalLocation/*data.geographicalLocation*/){
+        angular.forEach(data.geographicalLocation/*data.geographicalLocation*/, function(value, key){
           geographicalLocation.push(value);
         });
       }
-      if (simulatedData.organization/*data.person*/){
-        angular.forEach(simulatedData.organization/*data.organization*/, function(value, key){
+      if (data.organization/*data.person*/){
+        angular.forEach(data.organization/*data.organization*/, function(value, key){
           organization.push(value);
         });
       }
-      if (simulatedData.othersEntities/*data.othersEntities*/){
-        angular.forEach(simulatedData.othersEntities/*data.othersEntities*/, function(value, key){
+      if (data.othersEntities/*data.othersEntities*/){
+        angular.forEach(data.othersEntities/*data.othersEntities*/, function(value, key){
           othersEntities.push(value);
         });
       }
-      if (simulatedData.concepts/*data.person*/){
-        angular.forEach(simulatedData.concepts/*data.person*/, function(value, key){
+      if (data.concepts/*data.person*/){
+        angular.forEach(data.concepts/*data.person*/, function(value, key){
           concepts.push(value);
         });
       }

@@ -27,8 +27,11 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(morgan('dev'));
 app.use(bodyParser());
+app.use( bodyParser.json({limit: '1000mb'}));     // to support JSON-encoded bodies
+app.use( bodyParser.urlencoded({ extended: false, limit: '1000mb' }));
 app.use(methodOverride());
 app.use(express.static(path.join(__dirname, 'public')));
+
 
 /**
  * Routes
@@ -42,10 +45,12 @@ app.get('/partials/:name', routes.partials);
 app.get('/api/name', api.name);
 
 app.post('/api/extraerSemantica', function(request, response){
-	console.log("[server.js] post /extraerSemantica/"); 
+	console.log("[server.js] post /extraerSemantica/")
+	var texto = request.body.text;
 	// es un texto y llamamos a extraer entidades + nube
+	var textoFormateado = texto.replace(/\n/g, "");
 
-	pln.getEntities(request.text, function(err, resultado){
+	pln.getEntities(textoFormateado, function(err, resultado){
 		if(err){
 			console.log(err);
 			console.log("[server.js] error en getEntities"); 
