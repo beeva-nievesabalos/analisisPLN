@@ -46,20 +46,41 @@ angular.module('myApp.controllers', []).
 
     $scope.uploadFile = function(files) {
       console.log('uploadFile');
-        var fd = new FormData();
-        fd.append("file", files[0]);
+      console.log(files[0]);
 
-        console.log(files[0]);
+      /*var fd = new FormData();
+      //Take the first selected file
+      fd.append("file", files[0]);*/
 
-        $scope.file = fd;
+      var reader = new FileReader();
+
+      // Closure to capture the file information.
+      reader.onload = (function(theFile) {
+        return function(e) {
+          // Render thumbnail.
+          console.log(e.target.result);
+          $scope.file = e.target.result;
+        };
+      })(files[0]);
+
+      reader.readAsBinaryString(files[0]);
+      //reader.readAsDataURL(files[0]);
+      //NOOOO reader.readAsText(files[0]);
+
+
+      console.log(files[0].toString());
+
+      $scope.file = files[0].toString();
     };
 
     $scope.sendFile = function(){
       if ($scope.file){
         $http.post('http://localhost:8080/api/extraerTexto', $scope.file, {
-            withCredentials: true,
-            headers: {'Content-Type': 'application/pdf', 'Accept':'application/pdf', "Content-Encoding":"ASCII"},
-            transformRequest: angular.identity
+            headers: {
+              'withCredentials': 'true',
+              'Content-Type': 'undefined',// 'multipart/form-data',//'application/pdf',
+              'transformRequest': angular.identity,
+            }
         }).success( function(data, status, headers, config) {
             console.log('...all right!...'+data)
         }).error( function(err) {
