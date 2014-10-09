@@ -5,7 +5,7 @@
       .col-lg-6
         .well.well-sm
           .form-group
-            label(for='pdfFile') Search for a pdf document
+            label(for='pdfFile') Selecciona un documento en PDF
             .input-group
               input(type="file", name="file", onchange="angular.element(this).scope().uploadFile(this.files)", ng-model="fileLoaded")
               span.input-group-addon
@@ -16,27 +16,27 @@
       .col-lg-6
         .well.well-sm
           .form-group
-            label(for='InputMessage') Or insert here your text
+            label(for='InputMessage') O introduce aquí el texto
             .input-group
               textarea#InputText.form-control(ng-model="inputText", name='InputText', rows='5')
               span.input-group-addon
                 span.glyphicon.glyphicon-asterisk(ng_click="clearText()")
 
-      input#submit.btn.btn-info.col-md-offset-5.col-sm-offset-5(name='submit', value='Procces', ng-click="sendData()")
+      input#submit.btn.btn-info.col-md-offset-5.col-sm-offset-5(name='submit', value='Procesar', ng-click="sendData()")
 
       .col-md-12.messages
         .alert.alert-success(ng-show="success")
           strong
-            span.glyphicon.glyphicon-ok  Success!
+            span.glyphicon.glyphicon-ok  Procesamiento completado
         .alert.alert-danger(ng-show="error")
           strong
-            span.glyphicon.glyphicon-remove  Error!
+            span.glyphicon.glyphicon-remove  ¡Error!
 
   hr
 
   .row
     .well.well-md.col-md-12.col-sm-12
-      label.col-md-12.col-sm-12 Results
+      label.col-md-12.col-sm-12 ¿De qué trata el documento?
       .form-group.col-md-6.col-sm-6#cloud
         .row
           .input-group
