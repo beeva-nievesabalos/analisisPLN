@@ -67,64 +67,58 @@ app.post('/api/extraerSemantica', function(request, response){
 
 //POST
 app.post('/api/extraerTexto', function(request, response){
-	console.log("[server.js] POST /extraerTexto/");  
+	console.log("[server.js] POST /extraerTexto/");
 	// llama a Apache Tika
   var data;
   request.on('data', function (chunk) {
+    if (chunk != undefined)
       data += chunk;
   });
 
   request.on('end', function(){
     console.log("Al acbar");
-    console.log(request.body);
 
-    var form = new formidable.IncomingForm();
+    //var buf = new Buffer(data);//undefined
+    //var b64text = buf.toString('utf8');
+    console.log(data);
 
-    form.parse(request, function(err, fields, files) {
-      /*res.writeHead(200, {'content-type': 'text/plain'});
-      res.write('received upload:\n\n');
-      res.end(util.inspect({fields: fields, files: files}));*/
+    //data = new Buffer(data, 'base64');
+    data = new Buffer(data, 'binary');
 
-      console.log(files[0]);
-      console.log(fields);
+    var hoy = Date.now();
+    var filename= "PDF_"+hoy+".pdf";
 
+    fs.writeFile(filename, data, function(err){
+      if (!err){
+        console.log('writed');
+        /*tika.extraerPDF(filename, function(err, information){
+          if(err){
+            console.log("[server.js] error en extraerPDF");
+            response.send(500);
+          }
+          else {
+            // 'information' tiene: {filename:filename, texto: text.trim(), metadata: meta}
+            // 1. eliminar los saltos de linea!!!
+            var texto = information.texto.replace(/\n/g, "");
 
-      var hoy = Date.now();
-      var filename= "PDF_"+hoy+".pdf";
-
-      fs.writeFile(filename, files[0], {encoding: 'binary'}, function(err){
-        if (!err){
-          tika.extraerPDF(filename, function(err, information){
-            if(err){
-              console.log("[server.js] error en extraerPDF");
-              response.send(500);
-            }
-            else {
-              // 'information' tiene: {filename:filename, texto: text.trim(), metadata: meta}
-              // 1. eliminar los saltos de linea!!!
-              var texto = information.texto.replace(/\n/g, "");
-
-              // 2. aqui se llama a getEntities
-              pln.getEntities(texto, function(err, resultado){
-                if(err){
-                  console.log("[server.js] error en getEntities:" + resultado);
-                  response.send(500);
-                }
-                else {
-                  // la info interesante esta en 'resultado' 
-                  response.send(200, resultado);
-                }
-              });
-            }
-          });
-        }else{
-          console.log("[server.js] error en writeFile");
-          response.send(500);
-        }
-      });
+            // 2. aqui se llama a getEntities
+            pln.getEntities(texto, function(err, resultado){
+              if(err){
+                console.log("[server.js] error en getEntities:" + resultado);
+                response.send(500);
+              }
+              else {
+                // la info interesante esta en 'resultado' 
+                response.send(200, resultado);
+              }
+            });
+          }
+        });*/
+      }else{
+        console.log("[server.js] error en writeFile");
+        response.send(500);
+      }
     });
-
-    
   });
 });
 

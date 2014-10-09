@@ -2051,11 +2051,11 @@ forEach({
                 }
               }
               return false;
-            };	
+            };  
 
           events[type] = [];
-		
-		  // Refer to jQuery's implementation of mouseenter & mouseleave
+    
+      // Refer to jQuery's implementation of mouseenter & mouseleave
           // Read about mouseenter and mouseleave:
           // http://www.quirksmode.org/js/events_mouse.html#link8
           var eventmap = { mouseleave : "mouseout", mouseenter : "mouseover"}          
@@ -2065,7 +2065,7 @@ forEach({
             // NB: No relatedTarget if the mouse left/entered the browser window
             if ( !related || (related !== target && !contains(target, related)) ){
               handle(event, type);
-            }	
+            } 
 
           });
 
